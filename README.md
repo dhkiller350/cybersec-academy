@@ -16,15 +16,15 @@ Open `index.html` in any modern browser — no server needed.
 
 | Feature | Details |
 |---|---|
-| 📚 **10 Learning Modules** | Networking, Linux CLI, Web Hacking, Password Security, Social Engineering, Malware Analysis, Cryptography, Wireless Security, CTF Training, Incident Response |
-| 📝 **50+ Quiz Questions** | 5 questions per module with instant feedback and highlighted correct answers |
+| 📚 **11 Learning Modules** | Networking, Linux CLI, Web Hacking, Password Security, Social Engineering, Malware Analysis, Cryptography, Wireless Security, CTF Training, Incident Response, Hacker Types & Ethics |
+| 📝 **55+ Quiz Questions** | 5 questions per module with instant feedback and highlighted correct answers |
 | 🚩 **5 CTF Challenges** | Caesar cipher, Base64, Hex, XOR, and MD5 hash-cracking challenges |
 | ⚡ **XP & Levelling System** | Earn XP for completing modules and solving CTF challenges |
-| 🏅 **11 Badges** | One badge per module + First Login badge |
+| 🏅 **12 Badges** | One badge per module + First Login badge |
 | 🏆 **Leaderboard** | Ranked leaderboard with simulated community members |
-| 📜 **Certificate** | Printable Certificate of Completion after finishing all 10 modules |
+| 📜 **Certificate** | Printable Certificate of Completion after finishing all 11 modules |
 | 🎨 **Dark / Light Theme** | Persistent theme preference |
-| ⚙️ **Settings** | Font size, notifications, password change, progress reset |
+| ⚙️ **Settings** | Font size, notifications (with per-type toggles + manual dismiss), password change, progress reset |
 | 🔒 **Client-side Auth** | localStorage-based accounts (no data leaves your browser) |
 
 ---
@@ -50,6 +50,7 @@ All modules are aligned with industry standards:
 8. 📡 **Wireless Security** — WEP/WPA/WPA3, Evil Twin, Bluetooth, IoT
 9. 🚩 **CTF Training** — Steganography, reverse engineering, OSINT
 10. 🚨 **Incident Response** — NIST IR lifecycle, digital forensics, chain of custody
+11. 🎩 **Hacker Types & Ethics** — White/Black/Red/Blue/Grey hat roles, responsible disclosure, ethics scenarios
 
 ---
 

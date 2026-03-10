@@ -16,17 +16,35 @@ const el = (tag, cls, text) => {
   return e;
 };
 
+const TOAST_TRANSITION_MS = 300; // must match CSS transition on .toast
+
+function dismissToast(toast) {
+  toast.classList.remove('show');
+  toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+  // Fallback removal in case transitionend doesn't fire
+  setTimeout(() => toast.remove(), TOAST_TRANSITION_MS + 100);
+}
+
 function showToast(msg, type = 'info', duration = 3500) {
   const container = $('toast-container');
   const toast = el('div', `toast toast-${type}`);
   toast.setAttribute('role', 'alert');
-  toast.textContent = msg;
+
+  const textSpan = el('span', 'toast-text');
+  textSpan.textContent = msg;
+
+  const closeBtn = el('button', 'toast-close');
+  closeBtn.type = 'button';
+  closeBtn.setAttribute('aria-label', 'Dismiss notification');
+  closeBtn.textContent = '✕';
+  closeBtn.addEventListener('click', () => dismissToast(toast));
+
+  toast.appendChild(textSpan);
+  toast.appendChild(closeBtn);
+
   container.appendChild(toast);
   requestAnimationFrame(() => toast.classList.add('show'));
-  setTimeout(() => {
-    toast.classList.remove('show');
-    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
-  }, duration);
+  setTimeout(() => dismissToast(toast), duration);
 }
 
 function sanitize(str) {
@@ -685,6 +703,128 @@ zsteg image.png  # PNG LSB analysis</code></pre>`,
       { q: 'Post-incident reviews (lessons learned) primarily help with?', a: 'Improving future preparation and response capabilities', opts: ['Billing clients', 'Improving future preparation and response capabilities', 'Legal prosecution only', 'Recovering deleted files'] },
     ],
   },
+  {
+    id: 'hacker-types',
+    title: 'Hacker Types & Ethics',
+    icon: '🎩',
+    xp: 150,
+    badge: { id: 'badge-hacker-types', name: 'Hat Spotter', icon: '🎩' },
+    topics: [
+      'White Hat & Black Hat Hackers',
+      'Red Hat, Blue Hat & Grey Hat',
+      'Motivations & Legal Boundaries',
+      'Ethics Scenarios: Choose Your Path',
+      'Responsible Disclosure & Bug Bounties',
+    ],
+    lessons: [
+      {
+        title: 'White Hat & Black Hat Hackers',
+        content: `<h3>White Hat & Black Hat Hackers</h3>
+<p>The colour-coded "hat" terminology comes from old Western films — the hero wore a white hat, the villain a black one.</p>
+<h4>🤍 White Hat (Ethical Hacker)</h4>
+<ul>
+  <li><strong>Who:</strong> Security professionals, penetration testers, bug bounty hunters</li>
+  <li><strong>What they do:</strong> Find and report vulnerabilities with <em>explicit written authorisation</em></li>
+  <li><strong>Legal status:</strong> Fully legal — contracted or employed</li>
+  <li><strong>Goal:</strong> Improve security, protect organisations and users</li>
+  <li><strong>Certifications:</strong> CEH, OSCP, CompTIA Security+</li>
+</ul>
+<h4>🖤 Black Hat (Malicious Hacker)</h4>
+<ul>
+  <li><strong>Who:</strong> Cybercriminals, ransomware operators, data thieves</li>
+  <li><strong>What they do:</strong> Conduct <em>unauthorised</em> attacks for financial gain, espionage, or disruption</li>
+  <li><strong>Legal status:</strong> Illegal — violates CFAA, Computer Misuse Act, and equivalent laws worldwide</li>
+  <li><strong>Consequences:</strong> Federal prosecution, fines, imprisonment</li>
+</ul>
+<p><strong>Key distinction:</strong> The technical skills are identical — the difference is <em>authorisation and intent</em>.</p>`,
+      },
+      {
+        title: 'Red Hat, Blue Hat & Grey Hat',
+        content: `<h3>Red Hat, Blue Hat & Grey Hat Hackers</h3>
+<h4>🩶 Grey Hat</h4>
+<p>Grey hats operate in the ethical middle-ground. They may break into systems <em>without authorisation</em> to discover vulnerabilities, then notify the owner — sometimes demanding payment for the report.</p>
+<p><strong>⚠️ Important:</strong> Even if their intent is to help, grey hat activity is <em>still illegal</em> — unauthorised access is a crime regardless of motivation.</p>
+<h4>🔴 Red Hat (Vigilante Hacker)</h4>
+<ul>
+  <li>Red hats aggressively target and disrupt Black Hat hackers and cybercriminal infrastructure</li>
+  <li>They may use offensive techniques (DDoS, counter-intrusion) against criminal systems</li>
+  <li><strong>Legal status:</strong> Vigilante hacking is illegal in most jurisdictions even if targeting criminals</li>
+  <li>The ethical path is to report criminal activity to authorities (CISA, FBI IC3, Europol)</li>
+</ul>
+<h4>🔵 Blue Hat (Pre-Release Security Tester)</h4>
+<ul>
+  <li>Outside security professionals invited to test a product <em>before its public release</em></li>
+  <li>Commonly associated with Microsoft's Blue Hat security conferences</li>
+  <li>Also informally used for individuals seeking revenge through hacking (non-professional)</li>
+  <li><strong>Professional use:</strong> Fully legal, engaged under formal contract</li>
+</ul>`,
+      },
+      {
+        title: 'Ethics Scenarios: Choose Your Path',
+        content: `<h3>Ethics Scenarios: Choose Your Path</h3>
+<p>Understanding hacker types means nothing if you can't apply that knowledge to real situations. The following scenarios are designed to test your ethical reasoning.</p>
+<h4>Scenario 1: The Accidental Discovery</h4>
+<p>While shopping online, you notice the URL contains a user ID parameter. Changing it to another number displays another customer's order history.</p>
+<p><strong>✅ White Hat response:</strong> Stop immediately, document the issue, and report it through the store's responsible disclosure / bug bounty programme. Do <em>not</em> access any further records.</p>
+<p><strong>❌ Grey/Black Hat response:</strong> Continuing to access other records is an IDOR (Insecure Direct Object Reference) attack and constitutes unauthorised access.</p>
+<h4>Scenario 2: The Open Wi-Fi</h4>
+<p>You're at a café and discover the public Wi-Fi has no encryption. You intercept traffic and can see other users' credentials.</p>
+<p><strong>✅ Ethical response:</strong> Disconnect. Notify the café owner. Intercepting others' traffic without consent is illegal under wiretap laws — even on an open network.</p>
+<h4>Scenario 3: Criminal Infrastructure</h4>
+<p>You discover a botnet C&C server. You have the skills to take it offline.</p>
+<p><strong>✅ Correct response:</strong> Report to law enforcement (CISA, FBI IC3, NCSC) and share your evidence. Taking vigilante action — even against criminals — is itself illegal and could undermine prosecution.</p>
+<h4>The Golden Rule</h4>
+<p>Before any security action, ask: <strong>"Do I have explicit written authorisation to do this?"</strong> If the answer is no — stop, document, and report through legal channels.</p>`,
+      },
+    ],
+    quiz: [
+      {
+        q: 'A penetration tester hired by a company to find and report vulnerabilities under a signed agreement is best described as:',
+        a: 'White Hat',
+        opts: ['Black Hat', 'Grey Hat', 'White Hat', 'Red Hat'],
+      },
+      {
+        q: 'A hacker breaks into a company\'s server without permission, discovers a vulnerability, and notifies the owner — demanding payment for the report. This is:',
+        a: 'Grey Hat — still illegal despite good intent',
+        opts: [
+          'White Hat — they reported it, so it is ethical',
+          'Grey Hat — still illegal despite good intent',
+          'Blue Hat — standard pre-release testing',
+          'Red Hat — defending the internet',
+        ],
+      },
+      {
+        q: 'You find a zero-day vulnerability in widely used banking software. What is the correct White Hat action?',
+        a: 'Report it privately to the vendor through their responsible disclosure process',
+        opts: [
+          'Sell it to the highest bidder on the dark web',
+          'Post technical details publicly so everyone can protect themselves',
+          'Report it privately to the vendor through their responsible disclosure process',
+          'Exploit it to prove it is real, then report it',
+        ],
+      },
+      {
+        q: 'A Red Hat hacker discovers a Black Hat\'s attack server. What distinguishes the ethical path from vigilante action?',
+        a: 'Reporting evidence to law enforcement rather than attacking the criminal\'s server directly',
+        opts: [
+          'Using stronger exploits than the criminal used',
+          'Reporting evidence to law enforcement rather than attacking the criminal\'s server directly',
+          'Notifying the criminal\'s ISP and waiting 24 hours',
+          'Publishing the criminal\'s personal details online',
+        ],
+      },
+      {
+        q: 'What is the single most important question to ask before performing any security testing activity?',
+        a: 'Do I have explicit written authorisation to test this system?',
+        opts: [
+          'Is the vulnerability serious enough to justify the test?',
+          'Can I complete the test without being detected?',
+          'Do I have explicit written authorisation to test this system?',
+          'Will the results help improve the organisation\'s security?',
+        ],
+      },
+    ],
+  },
 ];
 
 const ALL_BADGES = [
@@ -779,8 +919,8 @@ const CTF_CHALLENGES = [
 
 /* ── Simulated leaderboard players ─────────────────────────── */
 const LEADERBOARD_BOTS = [
-  { username: 'n3tz3r0', xp: 1550, modules: 10, badges: 11 },
-  { username: 'xpl0it_hunter', xp: 1400, modules: 10, badges: 10 },
+  { username: 'n3tz3r0', xp: 1700, modules: 11, badges: 12 },
+  { username: 'xpl0it_hunter', xp: 1550, modules: 11, badges: 11 },
   { username: 'darkpulse99', xp: 1250, modules: 9, badges: 9 },
   { username: 'bytecrusher', xp: 1100, modules: 8, badges: 8 },
   { username: 'cipherqueen', xp: 950, modules: 7, badges: 7 },
@@ -823,7 +963,7 @@ const Auth = {
       modulesCompleted: [],
       ctfSolved: [],
       activity: [{ text: '🎉 Joined CyberSec Academy', time: new Date().toISOString() }],
-      settings: { theme: 'dark', fontSize: 16, notifModules: true, notifXP: true },
+      settings: { theme: 'dark', fontSize: 16, notifModules: true, notifXP: true, notifBadges: true },
     };
     users[id] = user;
     Store.set('csa_users', users);
@@ -947,7 +1087,9 @@ const Progress = {
     user.badges = user.badges || [];
     if (user.badges.includes(badgeId)) return;
     user.badges.push(badgeId);
-    showToast(`🏅 New badge: ${badgeName}!`, 'success', 4000);
+    if (user.settings?.notifBadges !== false) {
+      showToast(`🏅 New badge: ${badgeName}!`, 'success', 4000);
+    }
     user.activity.unshift({ text: `🏅 Earned badge: ${badgeName}`, time: new Date().toISOString() });
     if (user.activity.length > 20) user.activity.pop();
     Auth.saveUser(user);
@@ -1324,7 +1466,7 @@ const Render = {
     // Certificate
     const certDiv = $('profile-certs');
     if (user.modulesCompleted?.length === MODULES.length) {
-      certDiv.innerHTML = `<div class="cert-unlocked"><p>🎉 Certificate earned! You completed all 10 modules.</p>
+      certDiv.innerHTML = `<div class="cert-unlocked"><p>🎉 Certificate earned! You completed all ${MODULES.length} modules.</p>
         <button class="btn btn-primary" id="view-cert-btn">📜 View Certificate</button></div>`;
       $('view-cert-btn').addEventListener('click', () => Router.navigate('certificate'));
     } else {
@@ -1349,6 +1491,7 @@ const Render = {
     // Notifications
     $('notif-modules').checked = settings.notifModules !== false;
     $('notif-xp').checked = settings.notifXP !== false;
+    $('notif-badges').checked = settings.notifBadges !== false;
   },
 
   certificate() {
@@ -1572,6 +1715,14 @@ function wireEvents() {
     if (user) {
       user.settings = user.settings || {};
       user.settings.notifXP = $('notif-xp').checked;
+      Auth.saveUser(user);
+    }
+  });
+  $('notif-badges').addEventListener('change', () => {
+    const user = Auth.getUser();
+    if (user) {
+      user.settings = user.settings || {};
+      user.settings.notifBadges = $('notif-badges').checked;
       Auth.saveUser(user);
     }
   });
